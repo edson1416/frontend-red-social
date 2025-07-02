@@ -5,8 +5,8 @@ import {es} from "date-fns/locale";
 import HighlightOffRoundedIcon from '@mui/icons-material/HighlightOffRounded';
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
 
-const Chats = () => {
-
+const Chats = ({id_usuario}) => {
+    console.log("El id del usuario:",id_usuario);
     const idUsuario =1;
     const [openChats, setOpenChats] = React.useState(false);
     const [openChat, setOpenChat] = React.useState(false);

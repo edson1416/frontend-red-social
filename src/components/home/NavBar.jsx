@@ -5,11 +5,11 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 
-const NavBar = () => {
+const NavBar = ({usuario}) => {
 
     const [menuOpen, setMenuOpen] = React.useState(false);
     const [dropDown, setDropDown] = React.useState(false);
-
+    console.log("el usuario", usuario);
     return (
         <div className="bg-gray-900 fixed w-full text-white shadow-xl z-50">
             <div className="flex items-center justify-between p-3">
@@ -32,7 +32,7 @@ const NavBar = () => {
                 <div className="hidden md:flex items-center justify-end space-x-4 w-1/5">
                     <div className="flex items-center">
                         <div className="flex items-center space-x-2 hover:bg-gray-800">
-                            <h1>Edson Sarmiento</h1>
+                            <h1>{usuario.sub}</h1>
                             <button className="hover:cursor-pointer" onClick={() => setDropDown(!dropDown)}>
                                 <AccountCircleIcon fontSize="large" />
                             </button>

@@ -1,5 +1,6 @@
 import { createContext, useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
+import {removeAuthToken, setAuthToken} from "../api/api-principal.js";
 
 export const AuthContext = createContext();
 
@@ -24,12 +25,14 @@ const AuthProvider = ({ children }) => {
 
     const login = async (token) => {
         localStorage.setItem("token", token);
+        if (token) setAuthToken(token);
         const decode = jwtDecode(token);
         setUser(decode);
     };
 
     const logout = async () => {
         localStorage.removeItem("token");
+        removeAuthToken();
         setUser(null);
     };
 

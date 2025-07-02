@@ -8,15 +8,16 @@ import {useAuth} from "../../auth/useAuth.js";
 import {Navigate} from "react-router-dom";
 
 const PageHome = () => {
+    const {user} = useAuth();
+    console.log(user);
     return (
         <div className="">
-            <NavBar></NavBar>
+            <NavBar usuario={user}></NavBar>
             <div className="flex flex-row justify-between">
                 <BodyPage></BodyPage>
-                <p></p>
                 {/*<MiPerfil></MiPerfil>*/}
             </div>
-            <Chats></Chats>
+            <Chats id_usuario={user.id}></Chats>
         </div>
     );
 };
