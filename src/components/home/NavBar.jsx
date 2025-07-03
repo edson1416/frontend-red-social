@@ -9,7 +9,6 @@ const NavBar = ({usuario}) => {
 
     const [menuOpen, setMenuOpen] = React.useState(false);
     const [dropDown, setDropDown] = React.useState(false);
-    console.log("el usuario", usuario);
     return (
         <div className="bg-gray-900 fixed w-full text-white shadow-xl z-50">
             <div className="flex items-center justify-between p-3">
