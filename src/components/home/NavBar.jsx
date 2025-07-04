@@ -4,11 +4,28 @@ import GroupIcon from '@mui/icons-material/Group';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
+import {cerrarSesion} from "../../auth/auth-service.js";
+import {useAuth} from "../../auth/useAuth.js";
+import {useNavigate} from "react-router-dom";
 
 const NavBar = ({usuario}) => {
 
     const [menuOpen, setMenuOpen] = React.useState(false);
     const [dropDown, setDropDown] = React.useState(false);
+    const {logout} = useAuth();
+    const navigate = useNavigate();
+
+    const handleLogout = async (e) => {
+        e.preventDefault();
+        try{
+            await cerrarSesion()
+            logout()
+            navigate("/")
+        }catch (error){
+            console.log(error)
+        }
+    }
+
     return (
         <div className="bg-gray-900 fixed w-full text-white shadow-xl z-50">
             <div className="flex items-center justify-between p-3">
@@ -40,7 +57,7 @@ const NavBar = ({usuario}) => {
                         {dropDown && (
                             <div className="absolute right-0 top-13 mt-2 w-48 bg-white text-black rounded shadow-lg py-2 z-50 transition-all duration-200">
                                 <button className="block w-full text-left px-4 py-2 hover:bg-gray-100">Perfil</button>
-                                <button className="block w-full text-left px-4 py-2 hover:bg-gray-100">Cerrar sesión</button>
+                                <button className="block w-full text-left px-4 py-2 hover:bg-gray-100" onClick={handleLogout}>Cerrar sesión</button>
                             </div>
                         )}
                     </div>
