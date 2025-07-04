@@ -1,5 +1,6 @@
 import {useEffect, useState} from "react";
 import {chatsUsuario} from "../services/usuario-service.js";
+import socket from '/src/util/socket.js'
 
 
 export const useMisChats = (openChats) => {
@@ -18,7 +19,9 @@ export const useMisChats = (openChats) => {
         if (openChats) {
             cargarMisChats()
         }
-    },[openChats]);
+        socket.on("estoy_conectado",()=>cargarMisChats())
+
+    },[openChats,socket]);
 
     return {misChats, cargando};
 }

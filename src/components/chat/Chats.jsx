@@ -3,8 +3,10 @@ import socket from '/src/util/socket.js'
 import {format} from "date-fns";
 import {es} from "date-fns/locale";
 import HighlightOffRoundedIcon from '@mui/icons-material/HighlightOffRounded';
+import Brightness1Icon from '@mui/icons-material/Brightness1';
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
-import { useMisChats} from "../../hooks/chats-hook.js";
+import {useMisChats} from "../../hooks/chats-hook.js";
+import HideSourceIcon from '@mui/icons-material/HideSource';
 
 const Chats = ({id_usuario}) => {
     const [openChats, setOpenChats] = React.useState(false);
@@ -13,6 +15,7 @@ const Chats = ({id_usuario}) => {
     const mensajeFinal = useRef(null);
 
     const [nombreMiembro, setNombreMiembro] = React.useState('');
+    const [miembroConectado, setMiembroConectado] = React.useState(false);
     const [chat, setChat] = React.useState(null);
 
     const [mensajes, setMensajes] = React.useState([]);
@@ -29,6 +32,9 @@ const Chats = ({id_usuario}) => {
 
     useEffect(() => {
         if (!socket.connected) {
+            socket.io.opts.query = {
+                idUsuario: id_usuario,
+            }
             socket.connect()
         }
         // Cada vez que cambian los mensajes, hace scroll al final
@@ -40,10 +46,11 @@ const Chats = ({id_usuario}) => {
         return () => {
             socket.off('mensaje_recibido', mensajeRecibido);
         };
-    }, [socket, openChats ?? false,mensajes])
+    }, [socket, openChats ?? false, mensajes])
 
-    const abrirChat = (id_chat,nombre_miembro) => {
+    const abrirChat = (id_chat, nombre_miembro,conectado) => {
         setNombreMiembro(nombre_miembro);
+        setMiembroConectado(conectado);
         setChat(id_chat);
         setOpenChat(true);
         socket.emit('entrar_chat', id_chat.toString());
@@ -72,27 +79,38 @@ const Chats = ({id_usuario}) => {
                 overflow-y-auto
                 transition-all duration-300 ease-out
                 opacity-100 translate-y-0">
-                {!cargando ? misChats.map((item,index) => {
+                {!cargando ? misChats.map((item, index) => {
                         return (
                             <div key={index}
                                  className="flex flex-col bg-white p-2 rounded-lg hover:bg-gray-600 hover:text-white hover:cursor-pointer space-y-1">
 
                                 {/* Recorrer miembros */}
-                                {item.chats.miembros.map((miembro, i) =>{
+                                {item.chats.miembros.map((miembro, i) => {
 
-                                    if(miembro.user.id !== id_usuario){
-                                        return (
-                                            <button key={i}
-                                                    className="flex justify-between items-center w-full"
-                                                    onClick={() => abrirChat(item.chat_id,miembro.user.name)}>
-                                                <span>{miembro.user.name}</span>
-                                                <div className="bg-red-400 w-6 h-6 flex items-center justify-center rounded-full text-white text-xs">
-                                                    2
-                                                </div>
-                                            </button>
-                                        )
+                                        if (miembro.user.id !== id_usuario) {
+                                            return (
+                                                <button key={i}
+                                                        className="flex justify-between items-center w-full"
+                                                        onClick={() => abrirChat(item.chat_id, miembro.user.name,miembro.user.conectado)}>
+                                                    {miembro.user.conectado ?
+                                                        <Brightness1Icon fontSize="small"
+                                                                         sx={{color: 'green'}} ></Brightness1Icon>
+                                                        :
+                                                        <HideSourceIcon fontSize="small"
+                                                                         sx={{color: 'red'}}>
+                                                        </HideSourceIcon>
+                                                    }
+
+                                                    <span>{miembro.user.name}</span>
+                                                    <div
+                                                        className="bg-red-400 w-6 h-6 flex items-center justify-center rounded-full text-white text-xs">
+                                                        2
+                                                    </div>
+                                                </button>
+
+                                            )
+                                        }
                                     }
-                                }
                                 )}
 
                             </div>
@@ -111,6 +129,12 @@ const Chats = ({id_usuario}) => {
                 <div className="bg-gray-100 fixed bottom-20 right-4
                         w-72 rounded-lg shadow-lg z-50">
                     <div className="flex bg-gray-900 mb-3 justify-between items-center rounded-t-lg p-2">
+                        {miembroConectado ?
+                            <Brightness1Icon fontSize="small" sx={{color: 'green'}}></Brightness1Icon>
+                            :
+                            <HideSourceIcon fontSize="small" sx={{color: 'red'}}></HideSourceIcon>
+                        }
+
                         <h1 className="font-semibold text-white">
                             {nombreMiembro}
                         </h1>
