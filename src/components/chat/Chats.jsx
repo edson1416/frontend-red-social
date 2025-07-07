@@ -128,7 +128,7 @@ const Chats = ({id_usuario}) => {
 
             {/*Chat en especifico*/}
             {openChat && (
-                <div className="bg-gray-100 fixed bottom-20 right-4
+                <div className="bg-gray-100 fixed bottom-4 right-2
                         w-72 rounded-lg shadow-lg z-50">
                     <div className="flex flex-col bg-gray-900 mb-3 items-center rounded-t-lg p-2">
                         <div className="flex justify-between w-full">
