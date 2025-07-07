@@ -16,6 +16,7 @@ const Chats = ({id_usuario}) => {
 
     const [nombreMiembro, setNombreMiembro] = React.useState('');
     const [miembroConectado, setMiembroConectado] = React.useState(false);
+    const [ultimaConexion, setultimaConexion] = React.useState(null);
     const [chat, setChat] = React.useState(null);
 
     const [mensajes, setMensajes] = React.useState([]);
@@ -48,9 +49,10 @@ const Chats = ({id_usuario}) => {
         };
     }, [socket, openChats ?? false, mensajes])
 
-    const abrirChat = (id_chat, nombre_miembro,conectado) => {
+    const abrirChat = (id_chat, nombre_miembro,conectado,ultimaConexion =null ) => {
         setNombreMiembro(nombre_miembro);
         setMiembroConectado(conectado);
+        setultimaConexion(ultimaConexion);
         setChat(id_chat);
         setOpenChat(true);
         socket.emit('entrar_chat', id_chat.toString());
@@ -91,7 +93,7 @@ const Chats = ({id_usuario}) => {
                                             return (
                                                 <button key={i}
                                                         className="flex justify-between items-center w-full"
-                                                        onClick={() => abrirChat(item.chat_id, miembro.user.name,miembro.user.conectado)}>
+                                                        onClick={() => abrirChat(item.chat_id, miembro.user.name,miembro.user.conectado,miembro.user.fecha_ultima_conexion)}>
                                                     {miembro.user.conectado ?
                                                         <Brightness1Icon fontSize="small"
                                                                          sx={{color: 'green'}} ></Brightness1Icon>
@@ -128,22 +130,39 @@ const Chats = ({id_usuario}) => {
             {openChat && (
                 <div className="bg-gray-100 fixed bottom-20 right-4
                         w-72 rounded-lg shadow-lg z-50">
-                    <div className="flex bg-gray-900 mb-3 justify-between items-center rounded-t-lg p-2">
-                        {miembroConectado ?
-                            <Brightness1Icon fontSize="small" sx={{color: 'green'}}></Brightness1Icon>
-                            :
-                            <HideSourceIcon fontSize="small" sx={{color: 'red'}}></HideSourceIcon>
-                        }
+                    <div className="flex flex-col bg-gray-900 mb-3 items-center rounded-t-lg p-2">
+                        <div className="flex justify-between w-full">
+                            {miembroConectado ?
+                                <Brightness1Icon fontSize="small" sx={{color: 'green'}}></Brightness1Icon>
+                                :
+                                <HideSourceIcon fontSize="small" sx={{color: 'red'}}></HideSourceIcon>
+                            }
 
-                        <h1 className="font-semibold text-white">
-                            {nombreMiembro}
-                        </h1>
-                        <button className="hover:cursor-pointer" onClick={() => {
-                            setOpenChat(false)
-                            setShowMisChat(true)
-                        }}>
-                            <HighlightOffRoundedIcon sx={{color: 'white'}}></HighlightOffRoundedIcon>
-                        </button>
+                            <h1 className="font-semibold text-white">
+                                {nombreMiembro}
+                            </h1>
+                            <button className="hover:cursor-pointer" onClick={() => {
+                                setOpenChat(false)
+                                setShowMisChat(true)
+                            }}>
+                                <HighlightOffRoundedIcon sx={{color: 'white'}}></HighlightOffRoundedIcon>
+                            </button>
+                        </div>
+                        <div>
+                            {miembroConectado ?
+                                <h1 className="text-xs text-white">enlínea</h1>
+                                :
+                                <h1 className="text-xs text-white">
+                                    {ultimaConexion ?
+                                        format(new Date(ultimaConexion), 'dd MMM, HH:mm',{locale:es})
+                                        :
+                                        "no hay conexion"
+                                    }
+                                </h1>
+                            }
+
+                        </div>
+
                     </div>
                     <div className="space-y-2 overflow-y-auto h-80 p-2">
 
