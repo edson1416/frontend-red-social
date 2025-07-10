@@ -12,10 +12,9 @@ const Chats = ({id_usuario}) => {
         openChats,
         showMisChats,
         setOpenChats,
-        setOpenChat,
-        setShowMisChat,
         miembro,
         handleopenChat,
+        handlecloseChat,
         chat
     } = useAbrirChats();
 
@@ -38,6 +37,11 @@ const Chats = ({id_usuario}) => {
             }
             socket.connect()
         }
+
+        socket.onAny((eventName) => {
+            console.log(`escuchando: ${eventName}`);
+        })
+
         // Cada vez que cambian los mensajes, hace scroll al final
         mensajeFinal.current?.scrollIntoView({behavior: 'smooth'});
 
@@ -77,15 +81,15 @@ const Chats = ({id_usuario}) => {
             {/*Chat en especifico*/}
             {openChat && (
                 <MainChat
-                    setShowMisChat={setShowMisChat}
                     miembro={miembro}
-                    setOpenChat={setOpenChat}
                     mensajes={mensajes}
                     id_usuario={id_usuario}
                     mensajeFinal={mensajeFinal}
                     nuevoMensaje={nuevoMensaje}
                     setNuevoMensaje={setNuevoMensaje}
                     enviarMensaje={enviarMensaje}
+                    handleCloseChat={handlecloseChat}
+                    chat_id={chat}
                 ></MainChat>
             )}
 

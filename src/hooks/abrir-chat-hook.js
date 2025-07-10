@@ -30,8 +30,13 @@ export const useAbrirChats = () => {
         setShowMisChat(false);
     }
 
-    useEffect(() => {
+    const handlecloseChat = (id_chat) => {
+        setOpenChat(false)
+        setShowMisChat(true)
+        socket.emit('salir_chat', id_chat)
+    }
 
+    useEffect(() => {
     },);
 
     return {
@@ -41,6 +46,7 @@ export const useAbrirChats = () => {
         chat,
         miembro,
         handleopenChat,
+        handlecloseChat,
         setOpenChat,
         setOpenChats,
         setShowMisChat

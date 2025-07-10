@@ -10,7 +10,6 @@ export const useMisChats = (openChats) => {
 
     const cargarMisChats = async () => {
         const response = await chatsUsuario()
-        console.log(response.mis_chats)
         setMisChats(response.mis_chats);
         setCargando(false);
     }
