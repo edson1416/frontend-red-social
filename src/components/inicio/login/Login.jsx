@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import {login as loginRequest} from "../../../auth/auth-service.js";
 import {useAuth} from "../../../auth/useAuth.js";
@@ -7,6 +7,8 @@ const Login = () => {
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [error, setError] = useState(false);
+    const [show, setShow] = useState(false);
     const {login} = useAuth();
 
     const navigate = useNavigate();
@@ -16,11 +18,24 @@ const Login = () => {
         try {
             const response = await loginRequest({email, password});
             login(response);
+            setError(false);
             navigate("/home");
         } catch (err) {
             console.log(err);
+            setError(true);
         }
     }
+
+    useEffect(() => {
+        if (error) {
+            setShow(true);
+            const timer = setTimeout(() => {
+                setShow(false);
+                setError(false);
+            }, 3000);
+            return () => clearTimeout(timer);
+        }
+    },[error])
 
     return (
         <div className="shadow-lg shadow-white p-6 md:w-3/4 sm:w-full h-3/4 rounded-2xl text-white space-y-3">
@@ -54,6 +69,14 @@ const Login = () => {
                 <p className="font-sans ml-2">Aun no tienes una cuenta, registrate en este <a
                     className="text-blue-500 cursor-pointer underline" href="/">enlace</a></p>
             </div>
+
+            {error && (
+                <div className={`p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400
+                transition-opacity duration-500 ease-in-out ${show ? "opacity-100" : "opacity-0"}`}
+                     role="alert">
+                    <span className="font-medium">Error al iniciar sesión!</span> Correo o password incorrecto.
+                </div>
+            )}
         </div>
     );
 };
