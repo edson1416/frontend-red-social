@@ -20,6 +20,7 @@ const Chats = ({id_usuario}) => {
 
     const mensajeFinal = useRef(null);
     const [mensajes, setMensajes] = React.useState([]);
+    const [mensajesNoLeidos, setMensajesNoLeidos] = React.useState(0);
     const [nuevoMensaje, setNuevoMensaje] = React.useState('');
 
     const cargarMensaje = (data) => {
@@ -28,6 +29,11 @@ const Chats = ({id_usuario}) => {
 
     const mensajeRecibido = (data) => {
         setMensajes((prev) => [...prev, data]);
+    }
+
+    const contadorDM = (data) => {
+        console.log("contador: ",data)
+        setMensajesNoLeidos(data);
     }
 
     useEffect(() => {
@@ -47,6 +53,7 @@ const Chats = ({id_usuario}) => {
 
         socket.on('mensaje_recibido', mensajeRecibido)
         socket.on('cargar_mensajes', cargarMensaje)
+        socket.on('mensajes_no_leidos',contadorDM)
 
         return () => {
             socket.off('mensaje_recibido', mensajeRecibido);
@@ -70,7 +77,7 @@ const Chats = ({id_usuario}) => {
     return (<div>
 
             {showMisChats && (
-                <BotonMisChats openChats={openChats} setOpenChats={setOpenChats}></BotonMisChats>
+                <BotonMisChats openChats={openChats} setOpenChats={setOpenChats} mensajesNoLeidos={mensajesNoLeidos}></BotonMisChats>
             )}
 
             {/*Mis chats*/}

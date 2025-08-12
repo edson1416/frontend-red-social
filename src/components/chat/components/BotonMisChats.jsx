@@ -1,12 +1,12 @@
 import React from 'react';
 
-const BotonMisChats = ({setOpenChats, openChats}) => {
+const BotonMisChats = ({setOpenChats, openChats, mensajesNoLeidos}) => {
 
     return (
         <div>
             <div className="fixed bottom-10 bg-red-400 right-2 w-8 p-1 rounded-4xl shadow-lg z-60">
                 <div className="flex justify-center">
-                    <h1 className="flex">2</h1>
+                    <h1 className="flex">{mensajesNoLeidos}</h1>
                 </div>
             </div>
             <button className="fixed bottom-4 right-4 w-60 p-2 rounded-lg shadow-lg z-50
